@@ -4,7 +4,7 @@ import micropip
 import asyncio
 async def micro():
    await micropip.install('sqlite3')
-asyncio.run(micro())
+micro()
 import sqlite3
 
 import pickle
