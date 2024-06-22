@@ -2,7 +2,7 @@ import flet as ft, random, time, os
 import requests
 import micropip
 
-await micropip.install('sqlite3')
+micropip.install('sqlite3')
 
 import sqlite3
 
