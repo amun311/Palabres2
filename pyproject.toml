@@ -5,9 +5,12 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.10.0,<3.12"
-requests = "^2.32.3"
-flet = "^0.23.1"
+python = ">=3.10.0,<3.11"
+flet = "^0.19.0"
+beautifulsoup4 = "4.12.3"
+dogpile-cache = "1.3.1"
+pyrae = "0.1.4"
+requests = "^2.31.0"
 
 [tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md
