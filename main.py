@@ -1,5 +1,10 @@
 import flet as ft, random, time, os
 import requests
+import micropip
+import asyncio
+async def micro():
+   await micropip.install('sqlite3')
+asyncio.run(micro())
 import sqlite3
 
 import pickle
