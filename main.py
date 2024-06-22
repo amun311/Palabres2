@@ -1,6 +1,4 @@
 import flet as ft, random, time, os
-import micropip
-await micropip.install("sqlite3")
 import requests
 import sqlite3
 import pickle
