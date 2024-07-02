@@ -517,7 +517,7 @@ def main(page: ft.Page):
         return response["ip"]
 
 
-    def get_location():
+    '''def get_location():
         ip_address = get_ip()
         response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
         
@@ -529,7 +529,8 @@ def main(page: ft.Page):
     country = get_location()
     if country == 'España':game('es', 'cuvant5', 'es')
     elif country == 'Romania':game('ro', 'cuvant5', 'ro')
-    else : game('es', 'cuvant5', 'es')    
+    else :''' 
+    game('es', 'cuvant5', 'es')    
     '''try:
         with open('./palabres.cfg','r') as cfg:
             cfg = cfg.readline().split(',')
