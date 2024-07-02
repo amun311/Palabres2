@@ -1,11 +1,5 @@
 import flet as ft, random, time, os
 import requests
-import micropip
-
-micropip.install('sqlite3')
-
-import sqlite3
-
 import pickle
 color='LIGHT'
 ex=0
