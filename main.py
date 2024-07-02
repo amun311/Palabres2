@@ -1,6 +1,8 @@
 import flet as ft, random, time, os
 import requests
 import pickle
+
+
 color='LIGHT'
 ex=0
 count=10
