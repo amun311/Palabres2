@@ -1,6 +1,8 @@
 import flet as ft, random, time, os
 import requests
 import pickle
+
+
 color='LIGHT'
 ex=0
 count=10
@@ -143,7 +145,8 @@ def main(page: ft.Page):
     def game(lb,mod,lb_cuv):
         start=time.time()
         globals()['count'] = 0
-        #page.splash = ft.Row([ft.Text(f'',color=ft.colors.ORANGE,size=20,text_align='center')])
+        splash = ft.Row([ft.Text(f'',color=ft.colors.ORANGE,size=20,text_align='center')])
+        page.overlay.append(splash)
         lang=schimba_limba(lb)
         if lb_cuv =='es':
             lista_caractere = lista_caractere_es
@@ -163,22 +166,23 @@ def main(page: ft.Page):
             return choice    '''   
         def alege_cuvantul(litere,lb_cuv):
             lista_cuvinte=[]
-            with open(f'./cuv_def/{lb_cuv}_cuv_def{litere}.pkl', 'rb') as fisier:
-                defis=pickle.load(fisier)      
-            '''for cuv in defis.keys():
-                lista_cuvinte.append(cuv)'''
-            lista_cuvinte=list(defis.keys())
+            conexion = sqlite3.connect(f"./db/{lb_cuv}.db")
+            cursor = conexion.execute(f'SELECT cuvant FROM {lb_cuv} where length(cuvant) = {litere}')
+            fila=cursor.fetchall()
+
+            for cuv in fila:
+                for cv in cuv:
+                    lista_cuvinte.append(cv)
+                
             index_selectat = random.randint(0,len(lista_cuvinte)-1)
             choice = lista_cuvinte.pop(index_selectat) 
-            defi=defis[choice].split('[',maxsplit=1)  
-            definitie = defi[0]
-            if definitie == 'Vaya,no tengo la definición':
-                index_selectat = random.randint(0,len(lista_cuvinte)-1)
-                choice = lista_cuvinte.pop(index_selectat) 
-                defi=defis[choice].split('[',maxsplit=1)  
-                definitie = defi[0].strip() 
-            choice=choice.upper()
-            nr_cuv=len(defis)      
+            len_choice = len(choice)
+            conexion = sqlite3.connect(f"./db/{lb_cuv}.db")
+            cursor = conexion.execute(f'SELECT definitie FROM {lb_cuv} where cuvant = "{choice}"')
+            fila=cursor.fetchone()
+            #print(fila)
+            definitie = fila[0].strip()[len_choice+1:].strip()
+            nr_cuv=len(lista_cuvinte)   
             print(choice)
             print(definitie.strip())
             print(nr_cuv)
@@ -200,7 +204,7 @@ def main(page: ft.Page):
                 
         page.clean()
                     
-        def menu_item1(*args):            
+        ''' def menu_item1(*args):            
             def close_dlg(*args):                
                 dlg_modal.open = False
                 time.sleep(0.1)
@@ -243,7 +247,7 @@ def main(page: ft.Page):
             hf.heavy_impact()        
             page.dialog = dlg_modal
             dlg_modal.open = True           
-            page.update()
+            page.update()'''
         def menu_item3(*args):
             def close_dlg(*args):                
                 dlg_modal.open = False
@@ -309,8 +313,8 @@ def main(page: ft.Page):
                                 title=ft.Text(f'{lang[25]} {idl}'),center_title=False,bgcolor=ft.colors.SURFACE_VARIANT,toolbar_height=48,
                                 actions=[
                                     ft.IconButton(ft.icons.PLAY_CIRCLE,icon_color = ft.colors.RED,icon_size=36, on_click = lambda *args: game(lb,mod,lb_cuv), tooltip=lang[28]),
-                                    ft.TextButton(content=ft.Image(src='/es.png'), on_click=lambda e: set_limba('es')),
                                     ft.TextButton(content=ft.Image(src='/ro.png'), on_click=lambda e: set_limba('ro')),
+                                    ft.TextButton(content=ft.Image(src='/es.png'), on_click=lambda e: set_limba('es')),
                                     ft.PopupMenuButton(icon = ft.icons.MENU_ROUNDED,
                                             items=[
                                                 #ft.PopupMenuItem(text=lang[0], on_click=menu_item1,icon=ft.icons.LANGUAGE_ROUNDED),                                                
@@ -340,12 +344,10 @@ def main(page: ft.Page):
 
         
         (slider_value := ft.Text(f"{lang[11].capitalize()} {x[1]} {lang[12]}",color=ft.colors.ORANGE,size=20,text_align='center'))
-        #page.navigation_bar  = ft.Row([ft.Slider(divisions=10,max=11,active_color=ft.colors.RED,thumb_color=ft.colors.GREEN,value = int(x[1])-3 ,scale = 1.1,on_change=handle_change,tooltip=lang[13]),ft.Row([ft.Text('    ')]),],alignment=ft.MainAxisAlignment.END)
+        page.navigation_bar  = ft.Row([ft.Slider(divisions=10,max=11,active_color=ft.colors.RED,thumb_color=ft.colors.GREEN,value = int(x[1])-3 ,scale = 1.1,on_change=handle_change,tooltip=lang[13]),ft.Row([ft.Text('    ')]),],alignment=ft.MainAxisAlignment.END)
     
-        cont_count=ft.Container()   
-        page.add(ft.Column([ft.Row([cont_count,ft.Text(expand=True),ft.Slider(divisions=10,max=11,active_color=ft.colors.RED,thumb_color=ft.colors.GREEN,value = int(x[1])-3 ,scale = 1.1,on_change=handle_change,tooltip=lang[13]),ft.Row([ft.Text('    ')]),]),
-                         ft.Row([slider_value,ft.Text(nr_cuv,color = ft.colors.RED,size=20)],alignment=ft.MainAxisAlignment.END)
-                         ],col={"xs": 12/len(choice), "md": 12/len(choice), "xl":12/len(choice)},),)
+       
+        page.add(ft.Row([slider_value,ft.Text(nr_cuv,color = ft.colors.RED,size=20)],alignment=ft.MainAxisAlignment.END,col={"xs": 12/len(choice), "md": 12/len(choice), "xl":12/len(choice)},),)
         #print(len(choice)).
         with open('./palabres.cfg','w') as cfg:
             conf = f'{lb},{mod},{lb_cuv}'
@@ -385,19 +387,12 @@ def main(page: ft.Page):
             
             return res  
         
-          
-          
-        cont_count.content = ft.Text(f'{lang[22].capitalize()}: {vieti}',color=ft.colors.ORANGE,size=20,text_align='center') 
+            
+            
         def increment():
             globals()['count'] += 1 
             globals()['vieti'] -= 1
-            cont_count.content = ft.Text(f'{lang[22].capitalize()}: {vieti}',color=ft.colors.ORANGE,size=20,text_align='center')
-            
-            splash = ft.Row([ft.Text(f'{lang[22].capitalize()}: ',color=ft.colors.ORANGE,size=20,text_align='center'),cont_count.content])
-            
-            
-            
-            
+            page.splash = ft.Row([ft.Text(f'{lang[22].capitalize()}: {count}',color=ft.colors.ORANGE,size=20,text_align='center')])
         def code_check(*args):
             hf.heavy_impact()
             hf.heavy_impact()
@@ -505,8 +500,7 @@ def main(page: ft.Page):
             page.floating_action_button = ft.FloatingActionButton(icon=ft.icons.NIGHTLIGHT_OUTLINED,mini=True, on_click=dark_light, bgcolor=ft.colors.BLUE)
                
         #page.show_snack_bar(ft.SnackBar(content=ft.Text(definitie)))
-        page.add(   
-              
+        page.add(      
             ft.ResponsiveRow([ft.Text(definitie,color=ft.colors.BLUE,size = 16)],alignment=ft.MainAxisAlignment.CENTER),     
             ft.ResponsiveRow([i.valor() for i in lista],alignment=ft.MainAxisAlignment.CENTER,col={"xs":12/len(choice), "md": 12/len(choice), "xl":12/len(choice)}),
             ft.ResponsiveRow([],alignment=ft.MainAxisAlignment.CENTER),
@@ -518,12 +512,12 @@ def main(page: ft.Page):
             ft.ResponsiveRow([i for i in lista_cont_probe],alignment=ft.MainAxisAlignment.CENTER),           
                     
         )
-    '''def get_ip():
+    def get_ip():
         response = requests.get('https://api64.ipify.org?format=json').json()
         return response["ip"]
 
 
-    def get_location():
+    '''def get_location():
         ip_address = get_ip()
         response = requests.get(f'https://ipapi.co/{ip_address}/json/').json()
         
