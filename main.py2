@@ -11,11 +11,11 @@ def schimba_limba(cod_limba):
 
     ro=['Limbă','Ajutor','Despre','Alege limba','Română 🇷🇴','Spaniolă 🇪🇸','Litera este la poziția corectă','Litera este la poziția incorectă','Toate literele identice din cuvânt descoperite','Litera nu este în cuvânt','Există',
         'cuvinte din','litere','Glisează pentru a alege mărimea cuvântului','Nu, nu, nu!!! ','Îmi pare rău, nu ai reușit\n','să ghicești cuvântul','Cuvântul era:','Ai reușit în ','minut','secunde și',
-        'minute','încercări','Felicitări','Verifică','Palabres în','Limbă cuvânt','Engleză 🇬🇧','Atinge pentru un cuvânt nou în ','Opțiuni']
+        'minute','încercări','Felicitări','Verifică','Palabres în','Limbă cuvânt','Engleză 🇬🇧','Atinge pentru un cuvânt nou','Opțiuni']
 
     es=['Idioma','Ayuda','Acerca de','Elige tu idioma','Rumano 🇷🇴','Español 🇪🇸','Letra en la posición correcta','Letra en la posición incorrecta','Todas las letras iguales de la palabra encontradas','La letra no esta en la palabra','Hay',
         'palabras de','letras','Desliza para elegir el tamaño de la palabra','No, no, no!!! ','Lo siento, no has logrado\n','encontrar la palabra','La palabra era:','Lo has conseguido en ','minuto','segundos y',
-        'minutos', 'intentos','Felicidades','Comprueba','Palabres en','Idioma palabra','Inglés 🇬🇧','Pulsa para una nueva palabra en ','Opciones']
+        'minutos', 'intentos','Felicidades','Comprueba','Palabres en','Idioma palabra','Inglés 🇬🇧','Pulsa para una nueva palabra','Opciones']
     if cod_limba == 'ro':
         lang=ro
        
@@ -200,7 +200,7 @@ def main(page: ft.Page):
                 
         page.clean()
                     
-        '''def menu_item1(*args):            
+        def menu_item1(*args):            
             def close_dlg(*args):                
                 dlg_modal.open = False
                 time.sleep(0.1)
@@ -243,7 +243,7 @@ def main(page: ft.Page):
             hf.heavy_impact()        
             page.dialog = dlg_modal
             dlg_modal.open = True           
-            page.update()'''
+            page.update()
         def menu_item3(*args):
             def close_dlg(*args):                
                 dlg_modal.open = False
@@ -308,9 +308,9 @@ def main(page: ft.Page):
         page.appbar = ft.AppBar(leading=img,
                                 title=ft.Text(f'{lang[25]} {idl}'),center_title=False,bgcolor=ft.colors.SURFACE_VARIANT,toolbar_height=48,
                                 actions=[
-                                    #ft.IconButton(ft.icons.PLAY_CIRCLE,icon_color = ft.colors.RED,icon_size=36, on_click = lambda *args: game(lb,mod,lb_cuv), tooltip=lang[28]),
-                                    ft.TextButton(content=ft.Image(src='/es.png'), on_click=lambda e: set_limba('es'), tooltip=lang[28]+lang[5]),
-                                    ft.TextButton(content=ft.Image(src='/ro.png'), on_click=lambda e: set_limba('ro'),tooltip=lang[28]+lang[4]),
+                                    ft.IconButton(ft.icons.PLAY_CIRCLE,icon_color = ft.colors.RED,icon_size=36, on_click = lambda *args: game(lb,mod,lb_cuv), tooltip=lang[28]),
+                                    ft.TextButton(content=ft.Image(src='/es.png'), on_click=lambda e: set_limba('es')),
+                                    ft.TextButton(content=ft.Image(src='/ro.png'), on_click=lambda e: set_limba('ro')),
                                     ft.PopupMenuButton(icon = ft.icons.MENU_ROUNDED,
                                             items=[
                                                 #ft.PopupMenuItem(text=lang[0], on_click=menu_item1,icon=ft.icons.LANGUAGE_ROUNDED),                                                
